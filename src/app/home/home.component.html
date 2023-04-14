@@ -1,30 +1,77 @@
-
 <div class="courses-panel">
+  <h3>All Courses</h3>
 
-        <h3>All Courses</h3>
+  <mat-tab-group>
+    <mat-tab label="Beginners">
+      <mat-card
+        *ngFor="let course of beginnerCourses"
+        class="course-card mat-elevation-z10"
+      >
+        <mat-card-header>
+          <mat-card-title>{{ course.description }}</mat-card-title>
+        </mat-card-header>
 
-        <mat-tab-group>
+        <img mat-card-image [src]="course.iconUrl" />
 
-            <mat-tab label="Beginners">
+        <mat-card-content>
+          <p>{{ course.longDescription }}</p>
+        </mat-card-content>
 
-                <courses-card-list [courses]="beginnerCourses$ | async">
+        <mat-card-actions class="course-actions">
+          <button
+            mat-button
+            mat-raised-button
+            color="primary"
+            [routerLink]="['/courses', course.id]"
+          >
+            VIEW COURSE
+          </button>
 
-                </courses-card-list>
+          <button
+            mat-button
+            mat-raised-button
+            color="accent"
+            (click)="editCourse(course)"
+          >
+            EDIT
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
 
-            </mat-tab>
+    <mat-tab label="Advanced">
+      <mat-card
+        *ngFor="let course of advancedCourses"
+        class="course-card mat-elevation-z10"
+      >
+        <mat-card-header>
+          <mat-card-title>{{ course.description }}</mat-card-title>
+        </mat-card-header>
 
-        <mat-tab label="Advanced">
+        <img mat-card-image [src]="course.iconUrl" />
 
-            <courses-card-list [courses]="advancedCourses$ | async">
+        <mat-card-content>
+          <p>{{ course.longDescription }}</p>
+        </mat-card-content>
 
-            </courses-card-list>
+        <mat-card-actions class="course-actions">
+          <button
+            mat-button
+            class="mat-raised-button mat-primary"
+            [routerLink]="['/courses', course.id]"
+          >
+            VIEW COURSE
+          </button>
 
-
-        </mat-tab>
-
-    </mat-tab-group>
-
-
-
+          <button
+            mat-button
+            class="mat-raised-button mat-accent"
+            (click)="editCourse(course)"
+          >
+            EDIT
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
 </div>
-
