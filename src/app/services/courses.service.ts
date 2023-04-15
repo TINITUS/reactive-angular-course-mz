@@ -11,10 +11,18 @@ import { Lesson } from "../model/lesson";
 export class CoursesService {
   constructor(private http: HttpClient) {}
 
-  loadAllCourses(): Observable<Course[]> {
+  loadCourseById(courseId: number): Observable<Course> {
+    return this.http
+      .get<Course>(`/api/courses/${courseId}`)
+      .pipe(
+        shareReplay()
+      );
+  }
+
+  loadAllCourses(): Observable<Course> {
     //Call http and return an observable matching the Course[] type
     return this.http
-      .get<Course[]>("/api/courses")
+      .get<Course>("/api/courses")
       .pipe(
         map((res) => res["payload"]),
         shareReplay()
