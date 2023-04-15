@@ -5,6 +5,7 @@ import { catchError, map, shareReplay, tap } from "rxjs/operators";
 import { HttpClient } from "@angular/common/http";
 import { LoadingService } from "../loading/loading.service";
 import { MessagesService } from "../messages/messages.service";
+import { Lesson } from "../model/lesson";
 
 @Injectable({
   providedIn: "root",
@@ -70,6 +71,17 @@ export class CoursesStore {
       );
     }
     
-
+    searchLessons(search: string): Observable<Lesson[]> {
+      return this.http.get<Lesson[]>("/api/lessons", {
+        params: {
+          filter: search,
+          pagesize: "100"
+        }
+      })
+      .pipe(
+        map(res => res["payload"]),
+        shareReplay(),
+      );
+    }
 
 }

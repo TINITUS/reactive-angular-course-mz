@@ -10,37 +10,37 @@ const AUTH_DATA = "auth_data";
   providedIn: "root",
 })
 export class AuthStore {
-  private subject = new BehaviorSubject<User>(null);
-
-  user$: Observable<User> = this.subject.asObservable();
+  private userSubject = new BehaviorSubject<User>(null);
+  user$: Observable<User> = this.userSubject.asObservable();
 
   isLoggedIn$: Observable<boolean>;
   isLoggedOut$: Observable<boolean>;
+  constructor(
+    private http: HttpClient,
+  ) {
 
-  constructor(private http: HttpClient) {
-    this.isLoggedIn$ = this.user$.pipe(map((user) => !!user));
-
-    this.isLoggedOut$ = this.isLoggedIn$.pipe(map((loggedIn) => !loggedIn));
+    this.isLoggedIn$ = this.user$.pipe(map(user => !!user));
+    this.isLoggedOut$ = this.isLoggedIn$.pipe(map(loggedIn => !loggedIn));
 
     const user = localStorage.getItem(AUTH_DATA);
-
     if (user) {
-      this.subject.next(JSON.parse(user));
+      this.userSubject.next(JSON.parse(user));
     }
   }
 
-  login(email: string, password: string): Observable<User> {
-    return this.http.post<User>("/api/login", { email, password }).pipe(
-      tap((user) => {
-        this.subject.next(user);
-        localStorage.setItem(AUTH_DATA, JSON.stringify(user));
-      }),
-      shareReplay()
-    );
+  login(email: string, password: string ): Observable<User> {
+    return this.http.post<User>("/api/login", { email, password })
+      .pipe(
+        tap(user => {
+          this.userSubject.next(user);
+          localStorage.setItem(AUTH_DATA, JSON.stringify(user));
+        }),
+        shareReplay(),
+      );
   }
 
   logout() {
-    this.subject.next(null);
+    this.userSubject.next(null);
     localStorage.removeItem(AUTH_DATA);
   }
 }
